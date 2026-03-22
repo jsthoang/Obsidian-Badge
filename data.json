@@ -5,13 +5,16 @@
   "mappings": [
     {
       "text": "ok",
-      "icon": "512x512.png"
+      "icon": "tomato.png"
     },
     {
-      "text": "123",
-      "icon": "tomato.png"
+      "text": "absolute cinema",
+      "icon": "Absolute_Cinema.webp"
     }
   ],
   "badgeSize": 40,
-  "iconFolder": "assets/icons"
+  "iconFolder": "assets/icons",
+  "storageLocation": "vault",
+  "keepRatio": false,
+  "storage": "plugin"
 }

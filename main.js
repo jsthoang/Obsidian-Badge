@@ -16,6 +16,29 @@ module.exports = class BadgePlugin extends Plugin {
     await this.loadSettings();
     this.addSettingTab(new BadgeSettingTab(this.app, this));
 
+    // Create a single shared tooltip element
+    this.tooltip = document.createElement("div");
+    this.tooltip.className = "badge-tooltip";
+    this.tooltip.style.cssText = `
+      position: fixed;
+      z-index: 99999;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      background: var(--background-primary);
+      border: 1px solid var(--background-modifier-border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+      pointer-events: none;
+      max-width: 180px;
+      text-align: center;
+      transition: opacity 0.12s ease;
+      opacity: 0;
+    `;
+    document.body.appendChild(this.tooltip);
+
     this.registerMarkdownPostProcessor((el) => {
       setTimeout(() => this.process(el), 100);
     });
@@ -34,6 +57,66 @@ module.exports = class BadgePlugin extends Plugin {
 
   onunload() {
     if (this.observer) this.observer.disconnect();
+    if (this.tooltip) this.tooltip.remove();
+  }
+
+  showTooltip(img, label, anchorEl) {
+    const tt = this.tooltip;
+    tt.innerHTML = "";
+
+    const previewImg = document.createElement("img");
+    previewImg.src = img.src;
+    previewImg.style.cssText = `
+      max-width: 120px;
+      max-height: 120px;
+      ${this.settings.keepRatio
+        ? "width: auto; height: 120px;"
+        : "width: 80px; height: 80px; object-fit: cover;"}
+      border-radius: 4px;
+      display: block;
+    `;
+
+    const label_el = document.createElement("span");
+    label_el.textContent = label;
+    label_el.style.cssText = `
+      font-size: 12px;
+      color: var(--text-normal);
+      font-weight: 500;
+      word-break: break-word;
+    `;
+
+    tt.appendChild(previewImg);
+    tt.appendChild(label_el);
+    tt.style.display = "flex";
+
+    // Position near the badge
+    const rect = anchorEl.getBoundingClientRect();
+    const ttWidth = 180;
+    const ttHeight = 160;
+    const margin = 10;
+
+    let left = rect.left + rect.width / 2 - ttWidth / 2;
+    let top = rect.top - ttHeight - margin;
+
+    // Flip below if not enough space above
+    if (top < 8) top = rect.bottom + margin;
+
+    // Clamp horizontally
+    left = Math.max(8, Math.min(left, window.innerWidth - ttWidth - 8));
+
+    tt.style.left = left + "px";
+    tt.style.top = top + "px";
+
+    requestAnimationFrame(() => { tt.style.opacity = "1"; });
+  }
+
+  hideTooltip() {
+    this.tooltip.style.opacity = "0";
+    setTimeout(() => {
+      if (this.tooltip.style.opacity === "0") {
+        this.tooltip.style.display = "none";
+      }
+    }, 120);
   }
 
   // Resolve the actual filesystem path for the icon folder
@@ -105,6 +188,9 @@ module.exports = class BadgePlugin extends Plugin {
         this.applyBadgeSize(img);
 
         img.onerror = () => console.error("❌ Image failed:", url);
+
+        img.addEventListener("mouseenter", () => this.showTooltip(img, text, img));
+        img.addEventListener("mouseleave", () => this.hideTooltip());
 
         content.innerHTML = "";
         content.appendChild(img);
