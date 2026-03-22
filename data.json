@@ -1,0 +1,17 @@
+{
+  "properties": [
+    "badge"
+  ],
+  "mappings": [
+    {
+      "text": "ok",
+      "icon": "512x512.png"
+    },
+    {
+      "text": "123",
+      "icon": "tomato.png"
+    }
+  ],
+  "badgeSize": 40,
+  "iconFolder": "assets/icons"
+}

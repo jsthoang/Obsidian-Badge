@@ -1,0 +1,26 @@
+.badge-icon {
+  cursor: pointer;
+  margin-right: 4px;
+  transition: transform 0.2s;
+}
+
+.badge-icon:hover {
+  transform: scale(1.8);
+  z-index: 10;
+}
+
+.badge-icon::after {
+  content: attr(data-name);
+  position: absolute;
+  background: black;
+  color: white;
+  font-size: 12px;
+  padding: 4px 6px;
+  border-radius: 6px;
+  display: none;
+  transform: translateY(24px);
+}
+
+.badge-icon:hover::after {
+  display: block;
+}

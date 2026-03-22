@@ -1,0 +1,9 @@
+{
+  "id": "property-badge",
+  "name": "Property Badge",
+  "version": "1.0.0",
+  "minAppVersion": "1.5.0",
+  "description": "Replace property text with badge image",
+  "author": "you",
+  "main": "main.js"
+}
