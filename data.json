@@ -1,4 +1,24 @@
 {
+  "propertyConfigs": [
+    {
+      "key": "Badge",
+      "showTagText": false,
+      "mappings": [
+        {
+          "text": "ok",
+          "icon": "tomato.png"
+        },
+        {
+          "text": "absolute cinema",
+          "icon": "Absolute_Cinema.webp"
+        }
+      ]
+    }
+  ],
+  "badgeSize": 40,
+  "iconFolder": "assets/icons",
+  "storageLocation": "vault",
+  "keepRatio": false,
   "properties": [
     "badge"
   ],
@@ -12,9 +32,5 @@
       "icon": "Absolute_Cinema.webp"
     }
   ],
-  "badgeSize": 40,
-  "iconFolder": "assets/icons",
-  "storageLocation": "vault",
-  "keepRatio": false,
   "storage": "plugin"
 }
